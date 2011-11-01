@@ -34,17 +34,17 @@ die(const char * msg)
 static char *
 strapp(char * restrict s1, char * restrict s2)
 {
-    const size_t len = (s1 ? strlen(s1) : 0) + strlen(s2) + 1;
+    const size_t len = (s1 ? strlen(s1) + 1 : 0) + strlen(s2) + 1;
     char * out = malloc(len);
 
     if (!out)
         die("Out of memory.");
     if (s1) {
         strcpy(out, s1);
+        strcat(out, " ");
         free(s1);
     }
-    strcat(out, s2);
-    return out;
+    return strcat(out, s2);
 }
 
 static char *
