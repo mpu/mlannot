@@ -75,7 +75,7 @@ cons_annot(struct annot *** pppa)
 {
     struct annot * pa;
 
-    if ((pa = **pppa = malloc(sizeof(***pppa))) == NULL)
+    if ((pa = **pppa = malloc(sizeof(struct annot))) == NULL)
         die("Out of memory.");
     *pa = (struct annot) { NULL, NULL, NULL };
     *pppa = &pa->next;
@@ -167,16 +167,17 @@ print_free_annot(struct annot * ann, FILE * f)
     bool sep = false;
 
     while (ann) {
-        struct annot * next;
-        if (sep)
-            fputs("  |  ", f);
-        fprintf(f, "%s: %s", ann->tag, ann->value);
-        next = ann->next;
-        free(ann->tag);
-        free(ann->value);
+        struct annot * const next = ann->next;
+        if (ann->tag && ann->value) {
+            if (sep)
+                fputs("  |  ", f);
+            fprintf(f, "%s: %s", ann->tag, ann->value);
+            free(ann->tag);
+            free(ann->value);
+            sep = true;
+        }
         free(ann);
         ann = next;
-        sep = true;
     }
     fputc('\n', f);
 }
