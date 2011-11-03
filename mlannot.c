@@ -169,9 +169,8 @@ print_free_annot(struct annot * ann, FILE * f)
     while (ann) {
         struct annot * const next = ann->next;
         if (ann->tag && ann->value) {
-            if (sep)
-                fputs("  |  ", f);
-            fprintf(f, "%s: %s", ann->tag, ann->value);
+            fprintf(f, "%s%s: %s", sep ? "  |  " : "",
+                    ann->tag, ann->value);
             free(ann->tag);
             free(ann->value);
             sep = true;
@@ -203,7 +202,8 @@ main(int argc, char ** argv)
     if (strsuff(fname = argv[1], ".ml")) {
         const size_t flen = strlen(argv[1]) + 4;
 
-        fname = malloc(flen);
+        if ((fname = malloc(flen)) == NULL)
+            die("Out of memory.");
         argv[1][flen - 7] = 0;
         strcpy(fname, argv[1]);
         strcat(fname, ".annot");
