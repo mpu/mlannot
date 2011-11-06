@@ -16,13 +16,19 @@ Where char\_number is the position of the expression you want to know
 the type and where file can be either a file name ending with .ml or
 .annot (this is useful when writing dirty vim scripts).
 
-If you want to use it in a vim script you should add some dirty line
+If you want to use it in a vim script you should add some dirty lines
 like this in your vimrc:
 
-    au FileType omlet nm <F3> :exec 'echomsg (system("mlannot' bufname('%') (line2byte(line('.'))+col('.')-1) '"))'<RETURN>
+    " VIM integration with mlannot
+    function! GetMLAnnot()
+      let l:filepos = line2byte(line('.')) + col('.') - 1
+      let l:msg     = system("mlannot " . bufname('%') . " " .  l:filepos)
+      echomsg substitute(l:msg, "\n", '', 'g') " remove trailing newline
+    endfunction
+    au FileType omlet nm ;t :call GetMLAnnot()<CR>
 
 I assume here that you have installed mlannot in your path, so you
-can call it simply, otherwise, modify the line above accordingly.
+can call it simply, otherwise, modify the script above accordingly.
 
 TODO
 ----
