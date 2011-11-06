@@ -23,7 +23,7 @@ like this in your vimrc:
     function! GetMLAnnot()
       let l:filepos = line2byte(line('.')) + col('.') - 1
       let l:msg     = system("mlannot " . bufname('%') . " " .  l:filepos)
-      echomsg substitute(l:msg, "\n", '', 'g') " remove trailing newline
+      echomsg substitute(l:msg, "\n", '', 'g')
     endfunction
     au FileType omlet nm ;t :call GetMLAnnot()<CR>
 
